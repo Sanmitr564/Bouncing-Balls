@@ -30,52 +30,28 @@ public class FirstDrawing extends ApplicationAdapter
     private BitmapFont font; //used to draw fonts (text)
     private SpriteBatch batch; //also needed to draw fonts (text)
 
-    public static final float WORLD_WIDTH = 600; 
-    public static final float WORLD_HEIGHT = 800;
-
     @Override//called once when we start the game
     public void create(){
 
         camera = new OrthographicCamera(); 
-        viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera); 
+        viewport = new FitViewport(GLOBAL.WORLD_WIDTH, GLOBAL.WORLD_HEIGHT, camera); 
         renderer = new ShapeRenderer(); 
         font = new BitmapFont(); 
         batch = new SpriteBatch();//if you want to use images instead of using ShapeRenderer 
+
+        GLOBAL.balls.add(new Ball(GLOBAL.WORLD_WIDTH / 4, GLOBAL.WORLD_HEIGHT / 2 - GLOBAL.RADIUS, GLOBAL.RADIUS, 0));
+        GLOBAL.balls.add(new Ball(GLOBAL.WORLD_WIDTH * 3/4 , GLOBAL.WORLD_HEIGHT / 2 - GLOBAL.RADIUS, GLOBAL.RADIUS, 180));
 
     }
 
     @Override//called 60 times a second
     public void render(){
-        viewport.apply(); 
-
-        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        float delta = Gdx.graphics.getDeltaTime();//1/60 
-
-        //draw everything on the screen
-        renderer.setProjectionMatrix(viewport.getCamera().combined);
-        
-        //begin the type of shapes we are drawing
-        renderer.begin(ShapeType.Line);
-        //set the color of the pen
-        renderer.setColor(Color.WHITE);
-        //look up "ShapeRenderer API libgdx" to see available methods
-        //alternatively type "renderer." then type ctrl + SPACEBAR to see available method calls
-        renderer.rect(80, 200, 100, 50);
-        //end the type of shape we are drawing!
-        renderer.end();
-        
-        
-        renderer.begin(ShapeType.Filled);
-        
-        renderer.setColor(Color.GREEN); 
-        renderer.rect(20, 40, 100, 50);
-       
-        renderer.end();
-
-        
-
+        beginRender();
+        addBall();
+        updateBallPos();
+        renderBalls();
     }
+
     @Override
     public void resize(int width, int height){
         viewport.update(width, height, true); 
@@ -87,4 +63,44 @@ public class FirstDrawing extends ApplicationAdapter
         batch.dispose(); 
     }
 
+    private void beginRender(){
+        viewport.apply(); 
+
+        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        float delta = Gdx.graphics.getDeltaTime();//1/60 
+
+        //draw everything on the screen
+        renderer.setProjectionMatrix(viewport.getCamera().combined);
+    }
+
+    private void updateBallPos(){
+        for(Ball ball: GLOBAL.balls){
+            if(ball.y + GLOBAL.RADIUS > GLOBAL.WORLD_HEIGHT)
+                ball.multiplyAngle(-1); 
+            if(ball.y - GLOBAL.RADIUS < 0)
+                ball.multiplyAngle(-1); 
+            if(ball.x - GLOBAL.RADIUS<0)
+                ball.addAngle(180);
+            if(ball.x + GLOBAL.RADIUS>GLOBAL.WORLD_WIDTH)
+                ball.addAngle(180);
+            ball.x += GLOBAL.BALL_SPEED * MathUtils.cosDeg(ball.getAngle());
+            ball.y += GLOBAL.BALL_SPEED * MathUtils.sinDeg(ball.getAngle());
+        }
+    }
+
+    private void renderBalls(){
+        renderer.begin(ShapeType.Filled);
+        for(Ball ball: GLOBAL.balls){
+            renderer.setColor(ball.getColor());
+            renderer.circle(ball.x, ball.y, ball.radius);
+        }
+        renderer.end();
+    }
+    
+    private void addBall(){
+        if(Gdx.input.isKeyJustPressed(Keys.SPACE)){
+             GLOBAL.balls.add(new Ball(GLOBAL.WORLD_WIDTH / 2 - GLOBAL.RADIUS, GLOBAL.WORLD_HEIGHT / 2 - GLOBAL.RADIUS, GLOBAL.RADIUS, (int)(Math.random()*360)));
+        }
+    }
 }
