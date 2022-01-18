@@ -103,4 +103,15 @@ public class FirstDrawing extends ApplicationAdapter
              GLOBAL.balls.add(new Ball(GLOBAL.WORLD_WIDTH / 2 - GLOBAL.RADIUS, GLOBAL.WORLD_HEIGHT / 2 - GLOBAL.RADIUS, GLOBAL.RADIUS, (int)(Math.random()*360)));
         }
     }
+    
+    private void calculateCollision(){
+        for(int i = 0; i < GLOBAL.balls.size()-1; i++){
+                for(int n = i+1; n < GLOBAL.balls.size(); n++){
+                    if(Intersector.overlaps(GLOBAL.balls.get(i), GLOBAL.balls.get(n))){
+                        
+                    }
+                }
+                
+            }
+    }
 }

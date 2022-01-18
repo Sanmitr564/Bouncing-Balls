@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 class Ball extends Circle{
     private float angle;
     private Color color;
+    
     public Ball(){
         super();
         angle = 0;
@@ -54,4 +55,5 @@ class Ball extends Circle{
     public Color getColor(){
         return color;
     }
+    
 }
