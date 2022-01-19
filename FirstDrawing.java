@@ -41,7 +41,7 @@ public class FirstDrawing extends ApplicationAdapter
 
         GLOBAL.balls.add(new Ball(GLOBAL.WORLD_WIDTH / 4, GLOBAL.WORLD_HEIGHT / 2 - GLOBAL.RADIUS, GLOBAL.RADIUS, 0));
         GLOBAL.balls.add(new Ball(GLOBAL.WORLD_WIDTH * 3/4 , GLOBAL.WORLD_HEIGHT / 2 - GLOBAL.RADIUS, GLOBAL.RADIUS, 180));
-
+        //GLOBAL.balls.add(new Ball(GLOBAL.WORLD_WIDTH * 3/4 , GLOBAL.WORLD_HEIGHT / 2 - GLOBAL.RADIUS, GLOBAL.RADIUS, -45));
     }
 
     @Override//called 60 times a second
@@ -50,6 +50,7 @@ public class FirstDrawing extends ApplicationAdapter
         addBall();
         updateBallPos();
         renderBalls();
+        calculateCollision();
     }
 
     @Override
@@ -116,7 +117,31 @@ public class FirstDrawing extends ApplicationAdapter
         for(int i = 0; i < GLOBAL.balls.size()-1; i++){
             for(int n = i+1; n < GLOBAL.balls.size(); n++){
                 if(Intersector.overlaps(GLOBAL.balls.get(i), GLOBAL.balls.get(n)) && !GLOBAL.balls.get(i).getLastCollided().equals(GLOBAL.balls.get(n))){
+                    Ball temp1 = GLOBAL.balls.get(i);
+                    Ball temp2 = GLOBAL.balls.get(n);
                     
+                    float t1Angle = temp1.getAngle();
+                    float t2Angle = temp2.getAngle();
+                    
+                    float xDiff = temp1.x - temp2.x;
+                    float yDiff = temp1.y - temp2.y;
+                    
+                    float contactAngle = 90 + (float)Math.toDegrees(Math.atan(yDiff/xDiff));
+                    
+                    float v1X = MathUtils.cosDeg(t2Angle - contactAngle) * MathUtils.cosDeg(contactAngle) + MathUtils.sinDeg(t1Angle - contactAngle) * MathUtils.cosDeg(contactAngle + 90);
+                    float v1Y = MathUtils.cosDeg(t2Angle - contactAngle) * MathUtils.sinDeg(contactAngle) + MathUtils.sinDeg(t1Angle - contactAngle) * MathUtils.sinDeg(contactAngle + 90);
+                    
+                    float v2X = MathUtils.cosDeg(t1Angle - contactAngle) * MathUtils.cosDeg(contactAngle) + MathUtils.sinDeg(t2Angle - contactAngle) * MathUtils.cosDeg(contactAngle + 90);
+                    float v2Y = MathUtils.cosDeg(t1Angle - contactAngle) * MathUtils.sinDeg(contactAngle) + MathUtils.sinDeg(t2Angle - contactAngle) * MathUtils.sinDeg(contactAngle + 90);
+                    
+                    float newAngle1 = (float)Math.toDegrees(Math.atan(v1Y/v1X));
+                    float newAngle2 = (float)Math.toDegrees(Math.atan(v2Y/v2X));
+                    
+                    temp1.setAngle(newAngle1);
+                    temp2.setAngle(newAngle2);
+                    
+                    temp1.setLastCollided(temp2);
+                    temp2.setLastCollided(temp1);
                 }
             }
         }
