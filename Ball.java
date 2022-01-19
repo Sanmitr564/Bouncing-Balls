@@ -6,7 +6,6 @@ class Ball extends Circle{
     private float angle;
     private Color color;
     private Ball lastCollided;
-    private int overlap;
     public Ball(){
         super();
         angle = 0;
@@ -63,21 +62,5 @@ class Ball extends Circle{
     
     public Ball getLastCollided(){
         return lastCollided;
-    }
-    
-    public void setOverlap(float f){
-        overlap = (int)f;
-    }
-    
-    public int getOverlap(){
-        return overlap;
-    }
-    
-    public void resetOverlap(){
-        overlap = 0;
-    }
-    
-    public void calculateOverlap(Vector2 a, Vector2 b){
-        Math
     }
 }

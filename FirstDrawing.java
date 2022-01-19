@@ -76,14 +76,22 @@ public class FirstDrawing extends ApplicationAdapter
 
     private void updateBallPos(){
         for(Ball ball: GLOBAL.balls){
-            if(ball.y + GLOBAL.RADIUS > GLOBAL.WORLD_HEIGHT)
+            if(ball.y + GLOBAL.RADIUS > GLOBAL.WORLD_HEIGHT){
+                ball.multiplyAngle(-1);
+                ball.setLastCollided(null);
+            }
+            if(ball.y - GLOBAL.RADIUS < 0){
                 ball.multiplyAngle(-1); 
-            if(ball.y - GLOBAL.RADIUS < 0)
-                ball.multiplyAngle(-1); 
-            if(ball.x - GLOBAL.RADIUS<0)
+                ball.setLastCollided(null);
+            }
+            if(ball.x - GLOBAL.RADIUS<0){
                 ball.addAngle(180);
-            if(ball.x + GLOBAL.RADIUS>GLOBAL.WORLD_WIDTH)
+                ball.setLastCollided(null);
+            }
+            if(ball.x + GLOBAL.RADIUS>GLOBAL.WORLD_WIDTH){
                 ball.addAngle(180);
+                ball.setLastCollided(null);
+            }
             ball.x += GLOBAL.BALL_SPEED * MathUtils.cosDeg(ball.getAngle());
             ball.y += GLOBAL.BALL_SPEED * MathUtils.sinDeg(ball.getAngle());
         }
@@ -97,21 +105,20 @@ public class FirstDrawing extends ApplicationAdapter
         }
         renderer.end();
     }
-    
+
     private void addBall(){
         if(Gdx.input.isKeyJustPressed(Keys.SPACE)){
-             GLOBAL.balls.add(new Ball(GLOBAL.WORLD_WIDTH / 2 - GLOBAL.RADIUS, GLOBAL.WORLD_HEIGHT / 2 - GLOBAL.RADIUS, GLOBAL.RADIUS, (int)(Math.random()*360)));
+            GLOBAL.balls.add(new Ball(GLOBAL.WORLD_WIDTH / 2 - GLOBAL.RADIUS, GLOBAL.WORLD_HEIGHT / 2 - GLOBAL.RADIUS, GLOBAL.RADIUS, (int)(Math.random()*360)));
         }
     }
-    
+
     private void calculateCollision(){
         for(int i = 0; i < GLOBAL.balls.size()-1; i++){
-                for(int n = i+1; n < GLOBAL.balls.size(); n++){
-                    if(Intersector.overlaps(GLOBAL.balls.get(i), GLOBAL.balls.get(n))){
-                        
-                    }
+            for(int n = i+1; n < GLOBAL.balls.size(); n++){
+                if(Intersector.overlaps(GLOBAL.balls.get(i), GLOBAL.balls.get(n)) && !GLOBAL.balls.get(i).getLastCollided().equals(GLOBAL.balls.get(n))){
+                    
                 }
-                
             }
+        }
     }
 }
