@@ -22,6 +22,7 @@ class Ball extends Circle{
         super(x,y,radius);
         this.angle = angle;
         color = GLOBAL.colors[(int)(Math.random()*16)];
+        lastCollided = GLOBAL.no;
     }
     
     public Ball(Vector2 position, float radius, float angle){

@@ -30,6 +30,7 @@ public class FirstDrawing extends ApplicationAdapter
     private BitmapFont font; //used to draw fonts (text)
     private SpriteBatch batch; //also needed to draw fonts (text)
 
+
     @Override//called once when we start the game
     public void create(){
 
@@ -79,19 +80,19 @@ public class FirstDrawing extends ApplicationAdapter
         for(Ball ball: GLOBAL.balls){
             if(ball.y + GLOBAL.RADIUS > GLOBAL.WORLD_HEIGHT){
                 ball.multiplyAngle(-1);
-                ball.setLastCollided(null);
+                ball.setLastCollided(GLOBAL.no);
             }
             if(ball.y - GLOBAL.RADIUS < 0){
                 ball.multiplyAngle(-1); 
-                ball.setLastCollided(null);
+                ball.setLastCollided(GLOBAL.no);
             }
             if(ball.x - GLOBAL.RADIUS<0){
                 ball.addAngle(180);
-                ball.setLastCollided(null);
+                ball.setLastCollided(GLOBAL.no);
             }
             if(ball.x + GLOBAL.RADIUS>GLOBAL.WORLD_WIDTH){
                 ball.addAngle(180);
-                ball.setLastCollided(null);
+                ball.setLastCollided(GLOBAL.no);
             }
             ball.x += GLOBAL.BALL_SPEED * MathUtils.cosDeg(ball.getAngle());
             ball.y += GLOBAL.BALL_SPEED * MathUtils.sinDeg(ball.getAngle());
@@ -126,7 +127,7 @@ public class FirstDrawing extends ApplicationAdapter
                     float xDiff = temp1.x - temp2.x;
                     float yDiff = temp1.y - temp2.y;
                     
-                    float contactAngle = 90 + (float)Math.toDegrees(Math.atan(yDiff/xDiff));
+                    float contactAngle = 27;// + (float)Math.toDegrees(Math.atan(yDiff/xDiff));
                     
                     float v1X = MathUtils.cosDeg(t2Angle - contactAngle) * MathUtils.cosDeg(contactAngle) + MathUtils.sinDeg(t1Angle - contactAngle) * MathUtils.cosDeg(contactAngle + 90);
                     float v1Y = MathUtils.cosDeg(t2Angle - contactAngle) * MathUtils.sinDeg(contactAngle) + MathUtils.sinDeg(t1Angle - contactAngle) * MathUtils.sinDeg(contactAngle + 90);
@@ -140,8 +141,9 @@ public class FirstDrawing extends ApplicationAdapter
                     temp1.setAngle(newAngle1);
                     temp2.setAngle(newAngle2);
                     
-                    temp1.setLastCollided(temp2);
-                    temp2.setLastCollided(temp1);
+                    temp1.setLastCollided(GLOBAL.balls.get(n));
+                    temp2.setLastCollided(GLOBAL.balls.get(i));
+                    
                 }
             }
         }

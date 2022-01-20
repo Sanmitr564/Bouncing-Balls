@@ -27,5 +27,5 @@ public class GLOBAL{
             Color.YELLOW,
         };
     
-    public static Ball no = new Ball
+    public static Ball no = new Ball(-100, -100, 1, 0);
 }
